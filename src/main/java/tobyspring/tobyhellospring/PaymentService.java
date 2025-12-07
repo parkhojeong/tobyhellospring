@@ -5,8 +5,13 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class PaymentService {
+    private final WebApiExRateProvider exRateProvider;
+
+    public PaymentService() {
+        this.exRateProvider = new WebApiExRateProvider();
+    }
+
     public Payment prepare(Long orderId, String currency, BigDecimal foreignCurrencyAmount) throws IOException {
-        WebApiExRateProvider exRateProvider = new WebApiExRateProvider();
         BigDecimal exRate = exRateProvider.getWebExRate(currency);
 
         // calculate amount
