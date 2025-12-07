@@ -15,7 +15,18 @@ import java.util.stream.Collectors;
 
 public class PaymentService {
     public Payment prepare(Long orderId, String currency, BigDecimal foreignCurrencyAmount) throws IOException {
-        // get exchange rate
+        BigDecimal exRate = getExRate(currency);
+
+        // calculate amount
+        BigDecimal convertedAmount = foreignCurrencyAmount.multiply(exRate);
+
+        // cal validUntil
+        LocalDateTime validUntil = LocalDateTime.now().plusMinutes(30);
+
+        return new Payment(orderId, currency, foreignCurrencyAmount, exRate, convertedAmount, validUntil);
+    }
+
+    private BigDecimal getExRate(String currency) throws IOException {
         URL url = new URL("https://open.er-api.com/v6/latest/" + currency);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -25,14 +36,7 @@ public class PaymentService {
         ObjectMapper mapper = new ObjectMapper();
         ExRateData data = mapper.readValue(response, ExRateData.class);
         BigDecimal exRate = data.rates().get("KRW");
-
-        // calculate amount
-        BigDecimal convertedAmount = foreignCurrencyAmount.multiply(exRate);
-
-        // cal validUntil
-        LocalDateTime validUntil = LocalDateTime.now().plusMinutes(30);
-
-        return new Payment(orderId, currency, foreignCurrencyAmount, exRate, convertedAmount, validUntil);
+        return exRate;
     }
 
     public static void main(String[] args) throws IOException {
