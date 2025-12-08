@@ -1,6 +1,5 @@
-package tobyspring.tobyhellospring;
+package tobyspring.tobyhellospring.exrate;
 
-import org.springframework.stereotype.Component;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.BufferedReader;
