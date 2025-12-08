@@ -14,17 +14,18 @@ class PaymentServiceTest {
     @Test
     void prepare() throws IOException {
         // 준비
-        PaymentService paymentService = new PaymentService(new WebApiExRateProvider());
+        PaymentService paymentService = new PaymentService(new ExRateProviderStub(BigDecimal.valueOf(500)));
 
         // 실행
         Payment payment = paymentService.prepare(1L, "USD", BigDecimal.TEN);
 
         // 검증
         // 환율정보
-        assertThat(payment.getExRate()).isNotNull();
+        assertThat(payment.getExRate()).isEqualTo(BigDecimal.valueOf(500));
 
         // 원화환산금액 계산
-        assertThat(payment.getConvertedAmount()).isEqualTo(payment.getExRate().multiply(payment.getForeignCurrencyAmount()));
+        assertThat(payment.getConvertedAmount())
+                .isEqualTo(BigDecimal.TEN.multiply(BigDecimal.valueOf(500)));
 
         // 원화환산금액 유효시간 계산
         assertThat(payment.getValidUntil()).isAfter(LocalDateTime.now());
