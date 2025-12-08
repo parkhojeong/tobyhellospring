@@ -18,15 +18,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ContextConfiguration(classes = TestObjectFactory.class)
 class PaymentServiceSpringTest {
 
-    @Autowired
-    private PaymentService paymentService;
+    @Autowired PaymentService paymentService;
+    @Autowired ExRateProviderStub exRateProviderStub;
 
     @Test
     void convertedAmount() throws IOException {
+        // exRate: 1000
         Payment payment = paymentService.prepare(1L, "USD", BigDecimal.TEN);
 
-        assertThat(payment.getExRate()).isEqualByComparingTo(BigDecimal.valueOf(1_000));
+        assertThat(payment.getExRate()).isEqualByComparingTo(valueOf(1_000));
         assertThat(payment.getConvertedAmount()).isEqualByComparingTo(valueOf(10_000));
+
+        // exRate: 500
+        exRateProviderStub.setExRate(valueOf(500));
+        Payment payment2 = paymentService.prepare(1L, "USD", BigDecimal.TEN);
+
+        assertThat(payment.getExRate()).isEqualByComparingTo(valueOf(500));
+        assertThat(payment.getConvertedAmount()).isEqualByComparingTo(valueOf(5_000));
     }
 
 }
