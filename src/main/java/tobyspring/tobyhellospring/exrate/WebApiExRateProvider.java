@@ -48,21 +48,4 @@ public class WebApiExRateProvider implements ExRateProvider {
             throw new RuntimeException(e);
         }
     }
-
-    private static BigDecimal extractExRate(String response) throws JacksonException{
-        ObjectMapper mapper = new ObjectMapper();
-        ExRateData data = mapper.readValue(response, ExRateData.class);
-        return data.rates().get("KRW");
-    }
-
-    private static String executeApi(URI uri) throws IOException {
-        String response;
-        HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
-
-        try(BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()))){
-            response = br.lines().collect(Collectors.joining());
-        }
-        ;
-        return response;
-    }
 }
