@@ -2,6 +2,7 @@ package tobyspring.tobyhellospring.exrate;
 
 import org.springframework.boot.json.JsonParseException;
 import tobyspring.tobyhellospring.api.ApiExecutor;
+import tobyspring.tobyhellospring.api.ErApiExRateExtractor;
 import tobyspring.tobyhellospring.api.ExRateExtractor;
 import tobyspring.tobyhellospring.api.SimpleApiExecutor;
 import tobyspring.tobyhellospring.payment.ExRateProvider;
@@ -23,11 +24,7 @@ public class WebApiExRateProvider implements ExRateProvider {
     public BigDecimal getExRate(String currency) {
         String url = "https://open.er-api.com/v6/latest/" + currency;
 
-        return runApiForExRate(url, new SimpleApiExecutor(), response -> {
-            ObjectMapper mapper = new ObjectMapper();
-            ExRateData data = mapper.readValue(response, ExRateData.class);
-            return data.rates().get("KRW");
-        });
+        return runApiForExRate(url, new SimpleApiExecutor(), new ErApiExRateExtractor());
     }
 
     private static BigDecimal runApiForExRate(String url, ApiExecutor apiExecutor, ExRateExtractor exRateExtractor) {
