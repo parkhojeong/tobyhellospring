@@ -23,7 +23,7 @@ public class Payment {
     }
 
     public static Payment createPrepared(Long orderId, String currency, BigDecimal foreignCurrencyAmount, ExRateProvider exRateProvider,
-                                         Clock clock) throws IOException {
+                                         Clock clock) {
         BigDecimal exRate = exRateProvider.getExRate(currency);
 
         // calculate amount

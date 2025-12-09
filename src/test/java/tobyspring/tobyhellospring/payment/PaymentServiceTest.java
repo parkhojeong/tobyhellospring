@@ -23,7 +23,7 @@ class PaymentServiceTest {
     }
 
     @Test
-    void convertedAmount() throws IOException {
+    void convertedAmount() {
 
         testAmount(valueOf(500), valueOf(5_000), clock);
         testAmount(valueOf(1000), valueOf(10_000), clock);
@@ -31,7 +31,7 @@ class PaymentServiceTest {
     }
 
     @Test
-    void validUntil() throws IOException {
+    void validUntil() {
         PaymentService paymentService = new PaymentService(new ExRateProviderStub(valueOf(1_000)), clock);
 
         Payment payment = paymentService.prepare(1L, "USD", BigDecimal.TEN);
@@ -42,7 +42,7 @@ class PaymentServiceTest {
         Assertions.assertThat(payment.getValidUntil()).isEqualTo(expectedValidUntil);
     }
 
-    private static void testAmount(BigDecimal exRate, BigDecimal convertedAmount, Clock clock) throws IOException {
+    private static void testAmount(BigDecimal exRate, BigDecimal convertedAmount, Clock clock) {
         // 준비
         PaymentService paymentService = new PaymentService(new ExRateProviderStub(exRate), clock);
 

@@ -24,7 +24,7 @@ class PaymentServiceSpringTest {
     @Autowired ExRateProviderStub exRateProviderStub;
 
     @Test
-    void convertedAmount() throws IOException {
+    void convertedAmount() {
         // exRate: 1000
         Payment payment = paymentService.prepare(1L, "USD", BigDecimal.TEN);
 
@@ -40,7 +40,7 @@ class PaymentServiceSpringTest {
     }
 
     @Test
-    void validUntil() throws IOException {
+    void validUntil() {
         Payment payment = paymentService.prepare(1L, "USD", BigDecimal.TEN);
 
         LocalDateTime now = LocalDateTime.now(this.clock);

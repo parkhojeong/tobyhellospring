@@ -10,7 +10,7 @@ import java.time.temporal.ChronoUnit;
 
 public class PaymentTest {
     @Test
-    void createPrepared() throws IOException {
+    void createPrepared() {
         ExRateProvider exRateProvider = new ExRateProviderStub(BigDecimal.valueOf(1_000));
         Clock clock = Clock.fixed(Instant.now(), ZoneId.systemDefault());
         Payment payment = Payment.createPrepared(
@@ -22,7 +22,7 @@ public class PaymentTest {
     }
 
     @Test
-    void isValid() throws IOException {
+    void isValid() {
         ExRateProvider exRateProvider = new ExRateProviderStub(BigDecimal.valueOf(1_000));
         Clock clock = Clock.fixed(Instant.now(), ZoneId.systemDefault());
 
