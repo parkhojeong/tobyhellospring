@@ -32,7 +32,7 @@ public class WebApiExRateProvider implements ExRateProvider {
 
         String response;
         try {
-            response = excuteApi(uri);
+            response = executeApi(uri);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -50,7 +50,7 @@ public class WebApiExRateProvider implements ExRateProvider {
         return data.rates().get("KRW");
     }
 
-    private static String excuteApi(URI uri) throws IOException {
+    private static String executeApi(URI uri) throws IOException {
         String response;
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
 
