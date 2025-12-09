@@ -1,6 +1,8 @@
 package tobyspring.tobyhellospring.exrate;
 
+import org.springframework.boot.json.JsonParseException;
 import tobyspring.tobyhellospring.api.ApiExecutor;
+import tobyspring.tobyhellospring.api.ExRateExtractor;
 import tobyspring.tobyhellospring.api.SimpleApiExecutor;
 import tobyspring.tobyhellospring.payment.ExRateProvider;
 import tools.jackson.core.JacksonException;
@@ -21,10 +23,14 @@ public class WebApiExRateProvider implements ExRateProvider {
     public BigDecimal getExRate(String currency) {
         String url = "https://open.er-api.com/v6/latest/" + currency;
 
-        return runApiForExRate(url, new SimpleApiExecutor());
+        return runApiForExRate(url, new SimpleApiExecutor(), response -> {
+            ObjectMapper mapper = new ObjectMapper();
+            ExRateData data = mapper.readValue(response, ExRateData.class);
+            return data.rates().get("KRW");
+        });
     }
 
-    private static BigDecimal runApiForExRate(String url, ApiExecutor apiExecutor) {
+    private static BigDecimal runApiForExRate(String url, ApiExecutor apiExecutor, ExRateExtractor exRateExtractor) {
         URI uri;
         try {
             uri = new URI(url);
@@ -40,13 +46,13 @@ public class WebApiExRateProvider implements ExRateProvider {
         }
 
         try {
-            return extractExRate(response);
-        }catch (JacksonException e){
+            return exRateExtractor.extract(response);
+        }catch (JsonParseException e){
             throw new RuntimeException(e);
         }
     }
 
-    private static BigDecimal extractExRate(String response) {
+    private static BigDecimal extractExRate(String response) throws JacksonException{
         ObjectMapper mapper = new ObjectMapper();
         ExRateData data = mapper.readValue(response, ExRateData.class);
         return data.rates().get("KRW");
