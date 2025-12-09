@@ -34,13 +34,13 @@ public class WebApiExRateProvider implements ExRateProvider {
         }
 
         try {
-            return parseExRate(response);
+            return extractExRate(response);
         }catch (JacksonException e){
             throw new RuntimeException(e);
         }
     }
 
-    private static BigDecimal parseExRate(String response) {
+    private static BigDecimal extractExRate(String response) {
         ObjectMapper mapper = new ObjectMapper();
         ExRateData data = mapper.readValue(response, ExRateData.class);
         return data.rates().get("KRW");
