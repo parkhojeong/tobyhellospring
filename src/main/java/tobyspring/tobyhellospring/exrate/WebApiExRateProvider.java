@@ -1,5 +1,6 @@
 package tobyspring.tobyhellospring.exrate;
 
+import tobyspring.tobyhellospring.api.SimpleApiExecutor;
 import tobyspring.tobyhellospring.payment.ExRateProvider;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
@@ -32,7 +33,7 @@ public class WebApiExRateProvider implements ExRateProvider {
 
         String response;
         try {
-            response = executeApi(uri);
+            response = new SimpleApiExecutor().execute(uri);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
