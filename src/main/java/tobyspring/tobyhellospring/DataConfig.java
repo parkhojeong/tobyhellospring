@@ -7,6 +7,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import tobyspring.tobyhellospring.data.OrderRepository;
 
 import javax.sql.DataSource;
 
@@ -32,5 +33,10 @@ public class DataConfig {
         }}) ;
 
         return emf;
+    }
+
+    @Bean
+    public OrderRepository orderRepository() {
+        return new OrderRepository(entityManagerFactoryBean().getObject());
     }
 }
