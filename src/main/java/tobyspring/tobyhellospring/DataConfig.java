@@ -49,8 +49,5 @@ public class DataConfig {
         return new JpaTransactionManager(emf);
     }
 
-    @Bean
-    public OrderRepository orderRepository() {
-        return new OrderRepository();
-    }
+
 }
